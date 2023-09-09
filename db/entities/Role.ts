@@ -25,7 +25,7 @@ export class Role extends BaseEntity {
         permission=> permission.role
 
     )
-    permission: Permission[]
+    permissions: Permission[]
     @JoinTable()
 
     user: User[];

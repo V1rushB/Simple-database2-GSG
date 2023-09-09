@@ -11,11 +11,12 @@ export class Permission extends BaseEntity {
     @Column({length: 255,nullable: false})
     name: string;
 
+    @Column({length: 2077, nullable : false})
+    description: string
+
     @ManyToMany(
         ()=>Role,
-        role=> role.permission
+        role=> role.permissions
     )
-    @JoinTable()
-    
     role: Role[];
 }
