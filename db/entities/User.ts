@@ -1,9 +1,9 @@
-import {BaseEntity, BeforeInsert, Column, Entity,PrimaryGeneratedColumn,CreateDateColumn,ManyToMany, OneToOne, JoinTable} from 'typeorm';
+import {BaseEntity, BeforeInsert, Column, Entity,PrimaryGeneratedColumn,CreateDateColumn,ManyToMany, OneToOne, JoinTable, JoinColumn} from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Role } from './Role.js';
 import { Profile } from './Profile.js';
 
-Entity('usrs-tbl')
+@Entity('usrs-tbl')
 export class User extends BaseEntity {
     
     @PrimaryGeneratedColumn('increment')
@@ -24,26 +24,14 @@ export class User extends BaseEntity {
             this.password = await bcrypt.hash(this.password, 10)
         }   
     }
-
+    
     @CreateDateColumn({
         type: 'timestamp',
-        default: ()=>"CURRENT_TIMESTAMP(6)"
+        default: ()=>"CURRENT_TIMESTAMP()"
     })
     createdAt: Date;
 
-    @ManyToMany(
-        ()=> Role,
-        role=> role.user
-    )
+    @ManyToMany(() => Role, role => role.users, { eager: true })
     @JoinTable()
-    role : Role[];
-
-    @OneToOne(
-        ()=>Profile,
-        profile=> profile.user
-    )
-
-    profile: Profile;
-
-
+    roles: Role[];
 }

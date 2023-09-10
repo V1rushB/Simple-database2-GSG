@@ -2,13 +2,13 @@ import {BaseEntity, BeforeInsert, Column, Entity,PrimaryGeneratedColumn,CreateDa
 import { Role } from './Role.js';
 
 
-Entity('permissions-tbl')
+@Entity('permissions-tbl')
 export class Permission extends BaseEntity {
     
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({length: 255,nullable: false})
+    @Column({length: 255,nullable: false,unique: true})
     name: string;
 
     @Column({length: 2077, nullable : false})
@@ -18,5 +18,5 @@ export class Permission extends BaseEntity {
         ()=>Role,
         role=> role.permissions
     )
-    role: Role[];
+    roles: Role[];
 }

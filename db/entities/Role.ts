@@ -2,7 +2,7 @@ import {BaseEntity, BeforeInsert, Column, Entity,PrimaryGeneratedColumn,CreateDa
 import { User } from './User.js';
 import { Permission } from './Permission.js';
 
-Entity('roles-tbl')
+@Entity('roles-tbl')
 export class Role extends BaseEntity {
     
     @PrimaryGeneratedColumn('increment')
@@ -13,20 +13,22 @@ export class Role extends BaseEntity {
 
     @ManyToMany(
         ()=> User,
-        user => user.role,
+        user => user.roles,
         {
-            eager: true,
+            cascade: true
         }
     )
     @JoinTable()
+    users: User[];
 
     @ManyToMany(
         ()=> Permission,
-        permission=> permission.role
-
+        permission=> permission.roles,
+        {
+            eager: true
+        }
     )
-    permissions: Permission[]
     @JoinTable()
+    permissions: Permission[]
 
-    user: User[];
 }
