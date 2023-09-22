@@ -2,7 +2,7 @@ import express from 'express';
 import { User } from '../db/entities/User.js';
 import { Profile } from '../db/entities/Profile.js';
 import dataSource from '../db/dataSource.js';
-import {insertUserProfile,getUsers,getRoles} from '../controllers/findUser.js'
+import {insertUserProfile,getUsers,getRoles, login} from '../controllers/findUser.js'
 //import findUser from '../controllers/findUser.js';
 
 const router = express.Router();
@@ -60,6 +60,17 @@ router.get('/',(req: express.Request,res:express.Response)=> {
         res.status(500).send(`Somethink went wronk bruv`);
     })
 })
+
+router.post('/login',(req,res)=> {
+    const username = req.body.username;
+    const password = req.body.password;
+    
+    login(username,password).then(data=> {
+        res.status(200).send(data);
+    }).catch(err=> {
+        res.status(404).send(err);
+    })
+});
 
 
 export default router;

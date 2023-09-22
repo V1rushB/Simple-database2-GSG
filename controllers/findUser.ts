@@ -6,7 +6,8 @@ import { Role } from '../db/entities/Role.js';
 import { Permission } from '../db/entities/Permission.js';
 import { In } from 'typeorm';
 import { Profile } from '../db/entities/Profile.js';
-
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 
 // const findUserProfileInfo = async (userid : number)=> {
 //     return await User.findOne({where: {id:userid},relations:['Profile']});
@@ -69,10 +70,44 @@ const getRoles = () => {
     return roles;
 }
 
+const login = async (userName: string, password: string) => {
+    try {
+        const info = await User.findOne({
+            where: {username: userName}
+        });
+        if(info)
+        {
+            const passMatch = await bcrypt.compare(password, info.password || '');
+            if(passMatch)
+            {
+                const token = jwt.sign({
+                    email: info.email,
+                    userName: info.username
+                },
+                process.env.SECRET_KEY || '',
+                {
+                    expiresIn: '14d'
+                })
+                return token;
+            }
+            else {
+                throw("invalid password.")
+            }
+        }
+        else {
+            throw("invalid username.");
+        }
+
+    } catch(err) {
+        throw(`An error occured while trying to log you in. error: ${err}`);
+    }
+}
+
 export {
     insertPermission,
     insertRole,
     insertUserProfile,
     getUsers,
     getRoles,
+    login,
 }
