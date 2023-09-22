@@ -4,6 +4,7 @@ import { Permission } from '../db/entities/Permission.js';
 import { In } from 'typeorm';
 import dataSource from '../db/dataSource.js';
 import {insertPermission,insertRole,getUsers,getRoles} from '../controllers/findUser.js'
+import authme from '../middleware/Auth.js';
 
 const router = express.Router();
 
@@ -35,7 +36,7 @@ router.post('/',(req : express.Request, res : express.Response)=> {
     });
 });
 
-router.get('/',(req: express.Request, res: express.Response)=> {
+router.get('/',authme,(req: express.Request, res: express.Response)=> {
     getRoles().then(data=> {
         res.status(201).send(data);
     }).catch(err=> {

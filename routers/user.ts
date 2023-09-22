@@ -3,6 +3,7 @@ import { User } from '../db/entities/User.js';
 import { Profile } from '../db/entities/Profile.js';
 import dataSource from '../db/dataSource.js';
 import {insertUserProfile,getUsers,getRoles, login} from '../controllers/findUser.js'
+import authme from '../middleware/Auth.js';
 //import findUser from '../controllers/findUser.js';
 
 const router = express.Router();
@@ -53,7 +54,7 @@ router.post('/',(req: express.Request ,res: express.Response) => {
     })
 });
 
-router.get('/',(req: express.Request,res:express.Response)=> {
+router.get('/', authme ,(req: express.Request,res:express.Response)=> {
     getUsers().then(data=> {
         res.status(201).send(data);
     }).catch(err=> {
