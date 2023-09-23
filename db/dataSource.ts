@@ -14,12 +14,7 @@ const dataSource = new DataSource({
     entities: [Permission,Role,User,Profile],
     //migrations: ['./**/migration/*.ts'],
     logging: true,
-    //synchronize: true
+    synchronize: true
 });
 
-dataSource.initialize().then(()=> {
-    console.log(`Connected to DB dude!`);
-}).catch(err=> {
-    console.error(`Failed to connect to the database. Error: ${err}`);
-});
 export default dataSource;

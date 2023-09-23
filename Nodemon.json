@@ -1,0 +1,10 @@
+{
+    "env": {
+        "PORT": 2077,
+        "DB_HOST": "localhost",
+        "DB_USER_NAME": "root",
+        "DB_PASSWORD": "",
+        "DB_NAME": "gsg-hw",
+        "SECRET_KEY":"Hibyesheeesh"
+    }   
+}

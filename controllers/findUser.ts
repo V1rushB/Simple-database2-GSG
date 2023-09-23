@@ -28,7 +28,7 @@ const insertRole = async (payload: Role) => {
 }
 const insertUserProfile = async (payload: Gen.UserProfile) => {
     return dataSource.manager.transaction(async trans => {
-      const role = await Role.findOneBy({ name: payload.role });
+      const role = await Role.findOneBy({ name: 'admin' });
       
     //   const newProfile = Profile.create({
     //     firstName: payload.firstName,
@@ -73,7 +73,7 @@ const getRoles = () => {
 const login = async (userName: string, password: string) => {
     try {
         const info = await User.findOne({
-            where: {username: userName}
+            where: {email: userName}
         });
         if(info)
         {
@@ -88,7 +88,7 @@ const login = async (userName: string, password: string) => {
                 {
                     expiresIn: '14d'
                 })
-                return token;
+                return {userName,token};
             }
             else {
                 throw("invalid password.")

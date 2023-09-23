@@ -1,24 +1,24 @@
 import {BaseEntity, BeforeInsert, Column, Entity,PrimaryGeneratedColumn,CreateDateColumn, OneToOne, JoinTable, JoinColumn} from 'typeorm';
 import { User } from './User.js';
 
-@Entity('profiles-tbl')
+@Entity('profiles')
 export class Profile extends BaseEntity {
-    
     @PrimaryGeneratedColumn('increment')
-    id: number;
+    id: string;
 
-    @Column({length: 255,nullable: false})
-    firstName: string;
-    
-    @Column({length: 255,nullable: false})
-    lastName: string;
+    @Column({ length: 255, nullable: false })
+    firstName: string
 
-    @CreateDateColumn({
-        type: 'date'
-    })
+    @Column({ length: 255, nullable: false })
+    lastName: string
+
+    @Column({ type: "date", nullable: false })
     dateOfBirth: Date;
 
-    @OneToOne(() => User)
+    @Column()
+    name: string;
+
+    @OneToOne(() => User, user => user.profile)
     @JoinColumn()
-    user: User;
+    user: Partial<User>;
 }

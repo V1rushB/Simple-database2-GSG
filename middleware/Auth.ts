@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken';
 import { User } from '../db/entities/User.js';
 
 const authme = async (req:express.Request,res:express.Response,next: express.NextFunction) => {
-    const token = req.headers["autherization"] || "";
+    try {
+    const token = req.headers["authorization"] || "";
     const isValid = jwt.verify(token as string,process.env.SECRET_KEY || '');
 
     if(isValid) {
@@ -13,8 +14,12 @@ const authme = async (req:express.Request,res:express.Response,next: express.Nex
         })
         res.locals.user = user;
         next();
+        return;
     }
     res.status(401).send(`tf u doing bruv`);
+    } catch(err) {
+        res.send(err);
+    }
 }
 
 export default authme;

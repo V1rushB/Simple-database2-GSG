@@ -3,35 +3,36 @@ import bcrypt from 'bcrypt';
 import { Role } from './Role.js';
 import { Profile } from './Profile.js';
 
-@Entity('usrs-tbl')
+@Entity('users')
 export class User extends BaseEntity {
-    
-    @PrimaryGeneratedColumn('increment')
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-    @Column({length: 255,nullable: false})
+    @Column({ length: 255, nullable: false })
     username: string;
 
-    @Column({length: 255, nullable: false})
-    password: string;
-
-    @Column({length: 255})
+    @Column({ nullable: false })
     email: string;
 
     @BeforeInsert()
     async hashPassword() {
         if (this.password) {
             this.password = await bcrypt.hash(this.password, 10)
-        }   
+        }
     }
-    
-    @CreateDateColumn({
-        type: 'timestamp',
-        default: ()=>"CURRENT_TIMESTAMP()"
-    })
-    createdAt: Date;
+    @Column({ nullable: false })
+    password: string;
 
     @ManyToMany(() => Role, role => role.users, { eager: true })
     @JoinTable()
     roles: Role[];
+
+    @OneToOne(() => Profile, profile => profile.user, { eager: true })
+    profile: Partial<Profile>;
+
+    @CreateDateColumn({
+        type: 'timestamp',
+        default: () => "CURRENT_TIMESTAMP()"
+    })
+    createdAt: Date;
 }

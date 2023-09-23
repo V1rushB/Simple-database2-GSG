@@ -54,23 +54,28 @@ router.post('/',(req: express.Request ,res: express.Response) => {
     })
 });
 
-router.get('/', authme ,(req: express.Request,res:express.Response)=> {
+router.get('/',authme ,(req: express.Request,res:express.Response)=> {
     getUsers().then(data=> {
         res.status(201).send(data);
     }).catch(err=> {
-        res.status(500).send(`Somethink went wronk bruv`);
+        res.status(500).send(`Somethink went wronk bruv + ${err}`);
     })
 })
 
 router.post('/login',(req,res)=> {
-    const username = req.body.username;
+    const username = req.body.email;
     const password = req.body.password;
     
+    if(username && password) {
     login(username,password).then(data=> {
         res.status(200).send(data);
     }).catch(err=> {
         res.status(404).send(err);
     })
+    } 
+    else {
+        res.status(400).send(`Invalid email or password.`);
+    }
 });
 
 

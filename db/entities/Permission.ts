@@ -2,21 +2,16 @@ import {BaseEntity, BeforeInsert, Column, Entity,PrimaryGeneratedColumn,CreateDa
 import { Role } from './Role.js';
 
 
-@Entity('permissions-tbl')
+@Entity('permissions')
 export class Permission extends BaseEntity {
-    
     @PrimaryGeneratedColumn('increment')
-    id: number;
+    id: string;
 
-    @Column({length: 255,nullable: false,unique: true})
+    @Column({
+        unique: true
+    })
     name: string;
 
-    @Column({length: 2077, nullable : false})
-    description: string
-
-    @ManyToMany(
-        ()=>Role,
-        role=> role.permissions
-    )
+    @ManyToMany(() => Role, role => role.permissions)
     roles: Role[];
 }

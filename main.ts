@@ -29,5 +29,9 @@ app.use((req : express.Request,res: express.Response)=>{
 
 app.listen(PORT,()=> {
     console.log(`Server is ON and running on PORT: ${PORT}`);
-    db.initialize();
+    db.initialize().then(()=> {
+        console.log(`Connected to DB dude!`);
+    }).catch(err=> {
+        console.error(`Failed to connect to the database. Error: ${err}`);
+    });
 });
