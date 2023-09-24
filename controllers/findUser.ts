@@ -16,34 +16,36 @@ import jwt from 'jsonwebtoken'
 // export default findUserProfileInfo;
 
 const insertRole = async (payload: Role) => {
-    try {
-        const newRole = new Role();
-        newRole.name = payload.name;
-        newRole.permissions = await Permission.findBy({id: In(payload.permissions)});
-        
-        await newRole.save();
-    } catch(err) {
-        throw (`An error occured while trying to add the Role. error: ${err}`);
+   try {
+    return dataSource.manager.transaction(async trans => {
+        const perm = await Permission.findBy({ name: In(payload.permissions) });
+
+        if((perm.length !== payload.permissions.length) || !payload.permissions.length || !perm.length)
+            throw("Permission not found.")
+        const newRole = Role.create({
+            name: payload.name,
+            permissions: perm,
+        });
+        await trans.save(newRole);
+    })
+    } catch(err) 
+    {
+        throw(err);
     }
 }
-const insertUserProfile = async (payload: Gen.UserProfile) => {
+
+const insertUser = async (payload: Gen.User) => {
     return dataSource.manager.transaction(async trans => {
-      const role = await Role.findOneBy({ name: 'admin' });
-      
-    //   const newProfile = Profile.create({
-    //     firstName: payload.firstName,
-    //     lastName: payload.lastName,
-    //   });
+        const role = await Role.findOneBy({ name: payload.role });
+    if(!role)
+        throw("Invalid role.")
   
       const newUser = User.create({
         username: payload.username,
         password: payload.password,
         email: payload.email,
         roles: [role] as Role[],
-        //profile: newProfile,
       });
-  
-      //await trans.save(newProfile);
       await trans.save(newUser);
     });
   }
@@ -70,10 +72,15 @@ const getRoles = () => {
     return roles;
 }
 
-const login = async (userName: string, password: string) => {
+const getPermission = () => {
+    const permission = Permission.find()
+    return permission
+}
+
+const login = async (email: string, password: string) => {
     try {
         const info = await User.findOne({
-            where: {email: userName}
+            where: {email: email}
         });
         if(info)
         {
@@ -88,7 +95,7 @@ const login = async (userName: string, password: string) => {
                 {
                     expiresIn: '14d'
                 })
-                return {userName,token};
+                return {email,token};
             }
             else {
                 throw("invalid password.")
@@ -106,8 +113,9 @@ const login = async (userName: string, password: string) => {
 export {
     insertPermission,
     insertRole,
-    insertUserProfile,
+    insertUser,
     getUsers,
     getRoles,
     login,
+    getPermission,
 }

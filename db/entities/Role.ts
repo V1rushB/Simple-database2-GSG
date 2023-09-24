@@ -5,15 +5,12 @@ import { Permission } from './Permission.js';
 @Entity('roles')
 export class Role extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
-    id: string;
+    id: number;
 
     @Column({
-        type: 'enum',
-        enum: ['user', 'admin', 'editor'],
-        default: "user",
         unique: true
     })
-    name: 'user' | 'admin' | 'editor';
+    name: string;
 
     @ManyToMany(() => User, user => user.roles, { cascade: true })
     users: User[];

@@ -1,34 +1,25 @@
 import express from 'express';
 import { Permission } from '../db/entities/Permission.js';
 import dataSource from '../db/dataSource.js';
-import {insertPermission,getUsers,getRoles} from '../controllers/findUser.js'
+import {insertPermission,getUsers,getRoles, getPermission} from '../controllers/findUser.js'
+import authme from '../middleware/Auth.js';
 
 const router = express.Router();
 
-// router.post('/',(req,res)=> {
-//     try{
-//     const newPerm = new Permission();
-//     newPerm.name = req.body?.name;
-//     newPerm.description = req.body?.description;
-//     dataSource.transaction(async manager => {
-//         manager.save(newPerm);
-//     }).then(()=> {
-//         res.status(201).send(`Successfully added the perm, perm added: ${newPerm}`);
-//     }).catch(err=> {
-//         res.status(500).send(`db err, ${err}`);
-//     })
-//     }
-//     catch(err) {
-//     res.status(500).send(`an error occured while trying to add the permission, err: ${err}`);
-//     }
-// });
-
-router.post('/',(req : express.Request,res: express.Response)=> {
+router.post('/', async (req : express.Request,res: express.Response)=> {
     insertPermission(req.body).then(()=> {
         res.status(201).send(`Permissions has been added successfully.`);
     }).catch(err=> {
         res.status(500).send(`Unexpected Error: ${err}`);
     })
+});
+
+router.get('/',authme,(req : express.Request, res: express.Response)=> {
+    getPermission().then(data => {
+        res.status(200).send(data);
+    }).catch(err=> {
+        res.status(500).send(`An error occured.`);
+    });
 });
 
 export default router;

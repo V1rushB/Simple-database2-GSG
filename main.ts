@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.get('/health',(req,res)=> {
     res.status(200).send("Full HP");
-})
+});
 
 app.use('/user',user);
 app.use('/permission',permission);

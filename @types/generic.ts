@@ -22,17 +22,4 @@ export namespace Gen {
         lastName: string
         permission: number,
     }
-
-    export interface UserProfile {
-        id : number,
-        username: string,
-        password: string,
-        email: string,
-        createdAt: Date,
-        role: string,
-        profid : number,
-        firstName: string,
-        lastName: string,
-        rolePermission: number,
-    }
 }

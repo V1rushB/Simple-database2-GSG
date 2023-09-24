@@ -5,7 +5,7 @@ import { Role } from './Role.js';
 @Entity('permissions')
 export class Permission extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
-    id: string;
+    id: number;
 
     @Column({
         unique: true
@@ -16,5 +16,6 @@ export class Permission extends BaseEntity {
     description: string;
 
     @ManyToMany(() => Role, role => role.permissions)
+    @JoinTable()
     roles: Role[];
 }
