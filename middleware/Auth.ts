@@ -4,7 +4,7 @@ import { User } from '../db/entities/User.js';
 
 const authme = async (req:express.Request,res:express.Response,next: express.NextFunction) => {
     try {
-    const token = req.headers["authorization"] || "";
+    const token = req.headers["authorization"] || req.cookies["token"] || "";
     const isValid = jwt.verify(token as string,process.env.SECRET_KEY || '');
 
     if(isValid) {

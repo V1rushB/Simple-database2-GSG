@@ -6,13 +6,16 @@ import 'dotenv/config';
 import permission from './routers/permission.js';
 import role from './routers/role.js';
 import user from './routers/user.js';
+import cookieParser from 'cookie-parser';
+import { error } from 'console';
+import errorHandler from './middleware/error.js';
 
 
 
 const app = express();
 const PORT = process.env.PORT || 2077;
 app.use(express.json());
-
+app.use(cookieParser());
 
 
 app.get('/health',(req,res)=> {
@@ -23,9 +26,22 @@ app.use('/user',user);
 app.use('/permission',permission);
 app.use('/role',role);
 
+const dp = (x : number) => x*(x+1)/2;
+
 app.use((req : express.Request,res: express.Response)=>{
-    res.status(405).send(`Welp, you bruv requested something I dont have, maybe try and hack me?`);
+    let user : string = "Unknown";
+    if(req.cookies["userEmail"] && req.cookies)
+    {
+        user = req.cookies["userEmail"] as string;
+      //  user = `Nigga` // :)
+    }
+    const x = dp(10);
+    console.log(x);
+    res.status(405).send(`Welp, you bruv requested something I dont have, maybe try and hack me. Monsieur ${user}?`);
 });
+
+app.use(errorHandler);
+
 
 app.listen(PORT,()=> {
     console.log(`Server is ON and running on PORT: ${PORT}`);
